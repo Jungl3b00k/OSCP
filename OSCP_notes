@@ -1,0 +1,82 @@
+https://medium.com/@infosecsanyam/my-oscp-journey-30-03-2020-48444af3d786
+https://medium.com/@parthdeshani/how-to-pass-oscp-like-boss-b269f2ea99d
+https://github.com/SecWiki/windows-kernel-exploits/
+https://github.com/gammathc/oscp_material/tree/master/exploits/linux
+https://www.netsecfocus.com/oscp/2019/03/29/The_Journey_to_Try_Harder-_TJNulls_Preparation_Guide_for_PWK_OSCP.html#section-15-antivirus-bypassing
+https://www.abatchy.com/2017/03/how-to-prepare-for-pwkoscp-noobtps://medium.com/@falconspy/oscp-approved-tools-b2b4e889e707
+https://medium.com/@hakluke/haklukes-guide-to-hacking-without-metasploit-1bbbe3d14f90
+HACKTHEBOX OSCP
+https://docs.google.com/spreadsheets/d/1dwSMIAPIam0PuRBkCiDI88pU3yzrqqHkDtBngUHNCw8/edit#gid=1839402159
+
+
+understanding ls -al command
+https://detailed.wordpress.com/2017/10/28/understanding-ls-command-output/
+
+Buffer Overflow
+https://www.youtube.com/watch?v=qSnPayW6F7U&list=PLLKT__MCUeix3O0DPbmuaRuR_4Hxo4m3G
+https://github.com/Arken2/Everything-OSCP/blob/master/WindowsBufferOverflowChecklist.pdf
+https://github.com/justinsteven/dostackbufferoverflowgood/blob/master/dostackbufferoverflowgood_tutorial.md
+https://github.com/gh0x0st/Buffer_Overflow
+SSH Works how?
+https://www.thegeekyway.com/ultimate-guide-how-ssh-works/
+
+reverse shell
+https://github.com/Dhayalanb/windows-php-reverse-shell
+
+
+Dockers
+https://docs.docker.com/engine/docker-overview/
+https://www.aquasec.com/wiki/display/containers/Docker+Architecture
+https://geekflare.com/docker-architecture/
+
+HTB Writeup
+CraftBox
+https://blog.csdn.net/weixin_43202322/article/details/101029254
+
+OSCP NOTES
+https://securism.wordpress.com/oscp-notes-exploitation/
+https://scund00r.com/all/oscp/2018/02/25/passing-oscp.html
+All in One
+https://infosecsanyam261.gitbook.io/tryharder/one-page-methodology
+https://scund00r.com/all/oscp/2018/02/25/passing-oscp.html
+enum4linux
+A Linux alternative to enum.exe for enumerating data from Windows and Samba hosts.
+https://labs.portcullis.co.uk/tools/enum4linux/
+
+GTFOBins Privilege escalation
+https://www.embeddedhacker.com/2019/12/hacking-walkthrough-thm-linux-privesc-playground/
+https://gtfobins.github.io/
+https://mn3m.info/posts/suid-vs-capabilities/
+
+Privilege escalation
+https://gist.github.com/sckalath/8b8fe29ee5489eaefda1
+https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/
+https://guif.re/windowseop#EoP%200:%20System%20info
+https://www.fuzzysecurity.com/tutorials/16.html
+https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md#eop---incorrect-permissions-in-services
+https://github.com/ohpe/juicy-potato
+https://0xrick.github.io/hack-the-box/conceal/
+https://github.com/rhodejo/OSCP-Prep/blob/master/Priv-Esc.md
+https://medium.com/@rahmatnurfauzi/windows-privilege-escalation-scripts-techniques-30fa37bd194
+https://forums.offensive-security.com/showthread.php?4689-Offensive-Security-s-Complete-Guide-to-Alpha
+https://medium.com/@sghosh2402/privilege-escalation-in-windows-380bee3a2842
+
+shodan queries
+nostromo 1.9.6 exploit
+https://www.shodan.io/search?query=%22Server%3A+nostromo%22
+
+autorecon.py
+https://github.com/Tib3rius/AutoRecon 
+
+File Transfer Windows
+https://github.com/areyou1or0/OSCP/blob/master/File%20Transfers%20-%20Windows
+
+linux Kernel exploits
+https://github.com/lucyoa/kernel-exploits
+windows kernel exploits
+https://pentestlab.blog/2017/04/24/windows-kernel-exploits/
+
+windows compiling to exe 
+https://github.com/wwong99/pentest-notes/blob/master/scripts/xploit_installer.py
+https://github.com/huskar20/OSCP-prep/blob/master/Other/Cross-compiling.md
+

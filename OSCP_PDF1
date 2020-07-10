@@ -1,0 +1,244 @@
+1.1.3 - Find, Locate, and Which
+
+    ====Locate======
+    Once the database has been built, locate can be used to easily query this database when looking for local files.
+    root@kali:~# updatedb
+    root@kali:~# locate sbd.exe
+
+    ======Which========
+    The which command searches through the directories that are defined in the $PATH environment variable for a given filename.
+    root@kali:~# which sbd
+     /usr/bin/sbd
+
+    ======Find========
+    Find is able to recursively search any given path for various files.
+    find / -name sbd*
+      /usr/share/doc/sbd
+      /usr/share/windows-binaries/sbd.exe
+      /usr/share/windows-binaries/backdoors/sbd.exe
+      /usr/share/windows-binaries/backdoors/sbdbg.exe
+      /usr/bin/sbd
+1.2.2 - SSH Service
+  root@kali:~# systemctl start ssh
+  root@kali:~# netstat -antp|grep sshd
+    tcp 0 0 0.0.0.0:22 0.0.0.0:* LISTEN 25035/sshd
+    tcp6 0 0 :::22 :::* LISTEN 25035/sshd
+  root@kali:~# systemctl enable ssh
+    Synchronizing state of ssh.service wheheheith SysV init with /lib/systemd/systemdsysv-
+    install...
+1.2.3 - HTTP Service
+    root@kali:~# systemctl start apache2
+    root@kali:~# netstat -antp |grep apache
+      tcp6 0 0 :::80 :::* LISTEN 6691/apache2
+    root@kali:~# systemctl enable apache2
+1.3 - The Bash Environment
+1.4.1 - Practical Bash Usage – Example 1 Subdomain enumeration using index.html
+    root@kali:~# grep "href=" index.html | cut -d "/" -f 3 | grep "\." | cut -d '"' -f 1 | sort -u
+      blogs.cisco.com
+      blogs.cisco.com
+      communities.cisco.com
+      csr.cisco.com
+      developer.cisco.com
+      grs.cisco.com
+      home.cisco.com
+      investor.cisco.com
+      learningnetwork.cisco.com
+      newsroom.cisco.com
+      secure.opinionlab.com
+      socialmedia.cisco.com
+      supportforums.cisco.com
+      tools.cisco.com
+      www.cisco.com
+      www.ciscolive.com
+      www.meraki.com
+      
+   root@kali:~# cat index.html | grep -o 'http://[^"]*' | cut -d "/" -f 3 | sort –u > list.txt
+   root@kali:~# for url in $(cat list.txt); do host $url; done
+   root@kali:~# for url in $(cat list.txt); do host $url; done | grep "has address" | cut -d " " -f 4 | sort -u
+        128.30.52.37
+        136.179.0.2
+        141.101.112.4
+        …
+        206.200.251.19
+        23.63.101.114
+        23.63.101.80
+        23.66.240.170
+        23.66.251.95
+        50.56.191.136
+        64.148.82.50
+        66.187.208.213
+        67.192.93.178
+        
+1.4.2 - Practical Bash Usage – Example 2
+     We are given an Apache HTTP server log that contains evidence of an attack. Our task
+    is to use simple Bash commands to inspect the file and discover various pieces of
+    information, such as who the attackers were, and what exactly happened on the server.
+    head and wc commands to take a quick peek at the log file to
+    understand its structure.
+    root@kali:~# head access.log
+            93.241.170.13 - - [22/Apr/2013:07:09:11 -0500] "GET /favicon.ico HTTP/1.1" 404 506 "-
+        " "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.31 (KHTML, like
+        Gecko) Chrome/26.0.1410.65 Safari/537.31"
+        142.96.25.17 - - [22/Apr/2013:07:09:18 -0500] "GET / HTTP/1.1" 200 356 "-"
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.29.13 (KHTML, like
+        Gecko) Version/6.0.4 Safari/536.29.13"
+        root@kali:~# wc -l access.log
+        1788 access.log
+        
+    root@kali:~# cat access.log | cut -d " " -f 1 | sort -u
+            194.25.19.29
+            202.31.272.117
+            208.68.234.99
+            5.16.23.10
+            88.11.27.23
+            93.241.170.13
+
+    we use uniq and sort to further refine
+    our output, and sort the data by the number of times each IP address accessed the
+    server. 
+    root@kali:~# cat access.log | cut -d " " -f 1 | sort | uniq -c | sort -urn
+            1038 208.68.234.99
+            445 186.19.15.24
+            89 194.25.19.29
+            62 142.96.25.17
+            56 93.241.170.13
+            37 10.7.0.52
+            30 127.0.0.1
+            13 5.16.23.10
+            10 88.11.27.23
+            6 172.16.40.254
+            
+     root@kali:~# cat access.log | grep '208.68.234.99' | cut -d "\"" -f 2 | uniq -c
+            1038 GET //admin HTTP/1.1
+            
+            
+2.1 - Netcat
+2.2.Bind and Reverse Shell
+  
+2.4 - Tcpdump
+   we can use the command line tcpdump utility.
+    root@kali:~# tcpdump -r password_cracking_filtered.pcap
+    tcpdump -n src host 172.16.40.10 -r password_cracking_filtered.pcap
+    tcpdump -n dst host 172.16.40.10 -r password_cracking_filtered.pcap
+    tcpdump -n port 81 -r password_cracking_filtered.pcap
+    
+    root@kali:~# tcpdump -nX -r password_cracking_filtered.pcap
+        ...
+        08:51:25.043062 IP 208.68.234.99.33313 > 172.16.40.10.81: Flags [P.], seq 1:140, ack
+        1, win 115, options [nop,nop,TS val 25539314 ecr 71431651], length 139
+        0x0000: 4500 00bf 158c 4000 3906 9cea d044 ea63 E.....@.9....D.c
+        
+3.3.2 - Whois Enumeration
+    root@kali:~# whois xxx.com
+        Whois Server Version 2.0
+        Domain names in the .com and .net domains can now be registered
+        with many different competing registrars. Go to http://www.internic.net
+        for detailed information.
+        Domain Name: xxx.COM
+        Registrar: GANDI SAS
+        Whois Server: whois.gandi.
+    root@kali:~# whois 50.7.67.186
+        ...
+        NetRange: 50.7.64.0 - 50.7.67.255
+        CIDR: 50.7.64.0/22
+        OriginAS: AS30058
+        NetName: FDCSERVERS-MIAMI
+        ...
+        OrgName: FDCservers.net
+        OrgId: FDCSE-8
+        Address: 200 SE 1st St
+4.1 - DNS Enumeration
+    root@kali:~# host -t ns xxx.com
+        xx.com name server ns2.xx.com.
+        xx.com name server ns1.xx.com.
+        xx.com name server ns3.xx.com.
+    root@kali:~# host -t mx xx.com
+        xx.com mail is handled by 60 mail.xx.com.
+        
+        
+4.1.2 - Automating Lookups
+    root@kali:~# host www.xx.com
+        www.xx.com has address 50.7.67.162
+        
+4.2.1.1 - Connect Scanning
+    root@kali:~# nc -nvv -w 1 -z 10.0.0.19 3388-3390
+        (UNKNOWN) [10.0.0.19] 3390 (?) : Connection refused
+        (UNKNOWN) [10.0.0.19] 3389 (?) open
+        (UNKNOWN) [10.0.0.19] 3388 (?) : Connection refused
+        sent 0, rcvd 0
+        
+    root@kali:~# nc -nv -u -z -w 1 10.0.0.19 160-162
+        (UNKNOWN) [10.0.0.19] 161 (snmp) open
+4.2.1.1 Testing amount of packet recieved and passed during nmap scan using iptables command
+    root@kali:~# iptables -I INPUT 1 -s 10.0.0.19 -j ACCEPT
+    root@kali:~# iptables -I OUTPUT 1 -d 10.0.0.19 -j ACCEPT
+    root@kali:~# iptables -Z
+    root@kali:~# nmap -sT 10.0.0.19
+            Starting Nmap 6.25 ( http://nmap.org ) at 2013-04-20 06:36 EDT
+            Nmap scan report for 10.0.0.19
+            Host is up (0.00048s latency).
+            Not shown: 986 closed ports
+            PORT STATE SERVICE
+            21/tcp open ftp
+            23/tcp open telnet
+    root@kali:~# iptables -vn -L
+            Chain INPUT (policy ACCEPT 10 packets, 464 bytes)
+            pkts bytes target prot opt in out source destination
+            1002 40400 ACCEPT all -- * * 10.0.0.19 0.0.0.0/0
+            0 0 ACCEPT all -- * * 10.0.0.19 0.0.0.0/0
+            Chain OUTPUT (policy ACCEPT 4 packets, 1052 bytes)
+            pkts bytes target prot opt in out source destination
+            1201 71796 ACCEPT all -- * * 0.0.0.0/0 10.0.0.19
+            
+ 4.2.1.2- enum4linux is a tool for enumerating information from Windows and Samba systems”.
+    root@kali:~# enum4linux -a 10.11.xx.xx
+            ========================================
+            | OS information on 10.11.x.xx |
+            ========================================
+            [+] Got OS info for 10.xx.x.xx from smbclient: Domain=[WORKGROUP] OS=[Windows 5.0]
+            Server=[Windows 2000 LAN Manager]
+            
+            
+ 4.2.1.3-Checking vulnerablity script in nmap 
+    root@kali:~# ls -l /usr/share/nmap/scripts/smb*
+        -rw-r--r-- 1 root root 45197 Jan 24 17:55 /usr/share/nmap/scripts/smb-brute.nse
+        -rw-r--r-- 1 root root 4846 Jan 24 17:55 /usr/share/nmap/scripts/smb-enum-domains.nse
+        -rw-r--r-- 1 root root 5931 Jan 24 17:55 /usr/share/nmap/scripts/smb-enum-groups.nse
+        -rw-r--r-- 1 root root 8045 Jan 24 17:55 /usr/share/nmap/scripts/smb-enum-processes.nse
+        -rw-r--r-- 1 root root 12099 Jan 24 17:55 /usr/share/nmap/scripts/smb-enum-sessions.nse
+    root@kali:~# nmap -v -p 139, 445 --script=smb-os-discovery 10.11.1.227
+                    ...
+        Nmap scan report for 10.11.xx.xx
+        Host is up (0.57s latency).
+        PORT STATE SERVICE
+        139/tcp open netbios-ssn
+        Host script results:
+        | smb-os-discovery:
+        | OS: Windows 2000 (Windows 2000 LAN Manager)
+        | OS CPE: cpe:/o:microsoft:windows_2000::-
+        | Computer name: srv2
+        | NetBIOS computer name: SRV2
+        | Workgroup: WORKGROUP
+        ...
+        root@
+                
+    root@kali:~# nmap -v -p 139,445 --script=smb-vuln-ms08-067 --script-args=unsafe=1
+        10.11.xx.xx
+        Starting Nmap 7.01 ( https://nmap.org ) at 2016-03-20 00:04 EDT
+        NSE: Loaded 1 scripts for scanning.
+        NSE: Script Pre-scanning.
+        ...
+        Scanning 10.11.xx.xx [2 ports]
+        ...
+        Completed NSE at 00:04, 17.39s elapsed
+        Nmap scan report for 10.11.xx.xx
+        Host is up (0.17s latency).
+        PORT STATE SERVICE
+        139/tcp open netbios-ssn
+        445/tcp open microsoft-ds
+        MAC Address: 00:50:56:AF:02:91 (VMware)
+        Host script results:
+        | smb-vuln-ms08-067:
+        | VULNERABLE:
+        | Microsoft Windows sys
+   
